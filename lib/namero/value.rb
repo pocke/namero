@@ -1,6 +1,7 @@
 module Namero
   class Value
-    attr_reader :value, :candidates
+    attr_reader :value
+    attr_accessor :candidates
 
     def initialize(value:, candidates:)
       @value = value

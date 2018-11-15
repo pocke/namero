@@ -31,7 +31,6 @@ module Namero
         # 1 2 3
         # 4 5 6
         # 7 8 9
-        root_n = Integer.sqrt(n)
         start_y = (x / root_n) * root_n
         start_x = (x % root_n) * root_n
         idx = 0
@@ -63,7 +62,6 @@ module Namero
         # 0 1 2
         # 3 4 5
         # 6 7 8
-        root_n = Integer.sqrt(n)
         start_y = (x / root_n) * root_n
         start_x = (x % root_n) * root_n
         [].tap do |res|
@@ -95,6 +93,16 @@ module Namero
           x += 1
         end
       end
+    end
+
+    def block_index(x, y)
+      x2 = x / root_n
+      y2 = y / root_n
+      x2 + y2 * root_n
+    end
+
+    def root_n
+      Integer.sqrt(n)
     end
   end
 end
