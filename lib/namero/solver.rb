@@ -5,28 +5,18 @@ module Namero
     end
 
     def solve
-      loop do
-        unless solve_fill_row
-          break
-        end
-      end
+      fill_candidates
     end
 
     private
 
-    attr_reader :board
+    attr_reader :board, :candidate_board
 
-    def solve_fill_row
-      filled = false
-      n.times do |idx|
-        row = board[n, type: :row]
-        idx = row.find_index(nil)
-        next unless idx
-        candidates = (1..n).to_a - row
-        next unless candidates.size == 1
-        row[idx] = candidates[0]
+    def fill_candidates
+      board.each_values do |v, x, y|
+        next unless v
+
       end
-      filled
     end
 
     def n

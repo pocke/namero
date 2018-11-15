@@ -28,6 +28,9 @@ module Namero
           @values[i*@n+x] = value[i]
         end
       when :block
+        # 1 2 3
+        # 4 5 6
+        # 7 8 9
         raise NotImplementedError
       else
         raise "Unknown type: #{type}"
@@ -46,14 +49,41 @@ module Namero
       when :column
         @values.each_slice(@n).map{|row| row[x]}
       when :block
-        raise NotImplementedError
+        # 0 1 2
+        # 3 4 5
+        # 6 7 8
+        root_n = Integer.sqrt(n)
+        start_y = (x / root_n) * root_n
+        start_x = (x % root_n) * root_n
+        [].tap do |res|
+          root_n.times do |y_offset|
+            root_n.times do |x_offset|
+              res << self[start_x + x_offset, start_y + y_offset]
+            end
+          end
+        end
       else
         raise "Unknown type: #{type}"
       end
     end
 
     def dup
-      Board.new(n: @n, values: @values.dup)
+      values = @values.map(&:dup)
+      Board.new(n: @n, values: values)
+    end
+
+    def each_values
+      x = 0
+      y = 0
+      @values.each.with_index do |value, idx|
+        yield value, x, y
+        if x == n - 1
+          x = 0
+          y += 1
+        else
+          x += 1
+        end
+      end
     end
   end
 end

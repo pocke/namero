@@ -80,6 +80,19 @@ class TestBoard < Minitest::Test
     assert_equal [nil, 2, 1, nil], board[2, type: :column]
   end
 
+  def test_get_block
+    board = Namero::Board.new(n: 4, values: [
+      4,   1,   1,   3,
+      2,   3,   2,   2,
+      3,   1,   1,   3,
+      2,   4,   4,   2,
+    ])
+    assert_equal [4, 1, 2, 3], board[0, type: :block]
+    assert_equal [1, 3, 2, 2], board[1, type: :block]
+    assert_equal [3, 1, 2, 4], board[2, type: :block]
+    assert_equal [1, 3, 4, 2], board[3, type: :block]
+  end
+
   def assert_values(expected, board)
     got = board.instance_variable_get(:@values)
     assert_equal expected, got
