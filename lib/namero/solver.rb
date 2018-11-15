@@ -10,7 +10,7 @@ module Namero
 
     private
 
-    attr_reader :board, :candidate_board
+    attr_reader :board
 
     def fill_candidates
       board.each_values do |v, x, y|
