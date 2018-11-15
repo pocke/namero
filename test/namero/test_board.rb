@@ -47,6 +47,20 @@ class TestBoard < Minitest::Test
     ], board
   end
 
+  def test_set_block
+    board = Namero::Board.new(n: 4)
+    board[0, type: :block] = [1, 2, 3, 4]
+    board[1, type: :block] = [2, 3, 4, 1]
+    board[2, type: :block] = [1, 3, 2, 4]
+    board[3, type: :block] = [4, 2, 1, 3]
+    assert_values [
+      1, 2, 2, 3,
+      3, 4, 4, 1,
+      1, 3, 4, 2,
+      2, 4, 1, 3,
+    ], board
+  end
+
   def test_get_single
     board = Namero::Board.new(n: 4, values: [
       1,   nil, nil, nil,

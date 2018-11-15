@@ -31,7 +31,18 @@ module Namero
         # 1 2 3
         # 4 5 6
         # 7 8 9
-        raise NotImplementedError
+        root_n = Integer.sqrt(n)
+        start_y = (x / root_n) * root_n
+        start_x = (x % root_n) * root_n
+        idx = 0
+        [].tap do |res|
+          root_n.times do |y_offset|
+            root_n.times do |x_offset|
+              self[start_x + x_offset, start_y + y_offset] = value[idx]
+              idx += 1
+            end
+          end
+        end
       else
         raise "Unknown type: #{type}"
       end
