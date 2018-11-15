@@ -37,11 +37,11 @@ class TestBoard < Minitest::Test
 
   def board_from_string(str)
     n = 4
-    values = str.split("\n").map(&:chars).flatten.map do |v|
+    values = str.split("\n").map(&:chars).flatten.map.with_index do |v, idx|
       if v == 'x'
-        Namero::Value.new(value: nil, candidates: (1..n).to_a)
+        Namero::Value.new(value: nil, candidates: (1..n).to_a, index: idx)
       else
-        Namero::Value.new(value: Integer(v), candidates: [Integer(v)])
+        Namero::Value.new(value: Integer(v), candidates: [Integer(v)], index: idx)
       end
     end
     Namero::Board.new(n: n, values: values)

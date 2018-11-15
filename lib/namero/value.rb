@@ -1,11 +1,12 @@
 module Namero
   class Value
-    attr_reader :value
+    attr_reader :value, :index
     attr_accessor :candidates
 
-    def initialize(value:, candidates:)
+    def initialize(value:, candidates:, index:)
       @value = value
       @candidates = candidates
+      @index = index
     end
 
     def dup

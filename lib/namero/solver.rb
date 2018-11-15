@@ -16,30 +16,33 @@ module Namero
     attr_reader :board, :queue
 
     def fill_candidate_for(idx)
+      v = board[idx]
+      return unless v.value
+
+      board[idx, :row].each do |v2|
+        unless v2.value
+          v2.candidates -= [v.value]
+          queue << v.index
+        end
+      end
+      board[idx, :column].each do |v2|
+        unless v2.value
+          v2.candidates -= [v.value]
+          queue << v.index
+        end
+      end
+      board[idx, :block].each do |v2|
+        unless v2.value
+          v2.candidates -= [v.value]
+          queue << v.index
+        end
+      end
+      v.candidates = [v.value]
     end
 
     def fill_candidates
-      board.each_values.with_index do |v, idx|
-        next unless v.value
-        board[idx, :row].each do |v2|
-          unless v2.value
-            v2.candidates -= [v.value]
-            queue << idx
-          end
-        end
-        board[idx, :column].each do |v2|
-          unless v2.value
-            v2.candidates -= [v.value]
-            queue << idx
-          end
-        end
-        board[idx, :block].each do |v2|
-          unless v2.value
-            v2.candidates -= [v.value]
-            queue << idx
-          end
-        end
-        v.candidates = [v.value]
+      (n ** 2).times do |idx|
+        fill_candidate_for(idx)
       end
     end
 
