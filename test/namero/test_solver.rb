@@ -35,6 +35,18 @@ class TestBoard < Minitest::Test
     END
   end
 
+  def test_solve
+    board = board_from_string(<<~END.chomp)
+      xx4x
+      xxx1
+      4xxx
+      21xx
+    END
+    s = Namero::Solver.new(board)
+    s.solve
+    assert board.complete?
+  end
+
   def board_from_string(str)
     n = 4
     values = str.split("\n").map(&:chars).flatten.map.with_index do |v, idx|

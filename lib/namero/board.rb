@@ -86,11 +86,13 @@ module Namero
       end
     end
 
-    def block_index(x, y)
-      x2 = x / root_n
-      y2 = y / root_n
-      x2 + y2 * root_n
+    def complete?
+      @values.all? do |v|
+        v.value
+      end
     end
+
+    private
 
     def root_n
       Integer.sqrt(n)
