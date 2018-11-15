@@ -32,13 +32,5 @@ module Namero
     def n
       board.n
     end
-
-    def print_board
-      pp(4.times.map do |i|
-        board[i, type: :row].map do |v|
-          v.candidates
-        end
-      end)
-    end
   end
 end
