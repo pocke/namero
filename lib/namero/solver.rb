@@ -1,7 +1,10 @@
+require 'set'
+
 module Namero
   class Solver
     def initialize(board)
       @board = board
+      @queue = Set.new
     end
 
     def solve
@@ -10,20 +13,31 @@ module Namero
 
     private
 
-    attr_reader :board
+    attr_reader :board, :queue
+
+    def fill_candidate_for(idx)
+    end
 
     def fill_candidates
-      board.each_values do |v, x, y|
+      board.each_values.with_index do |v, idx|
         next unless v.value
-        board[y, type: :row].each do |v2|
-          v2.candidates -= [v.value] unless v2.value
+        board[idx, :row].each do |v2|
+          unless v2.value
+            v2.candidates -= [v.value]
+            queue << idx
+          end
         end
-        board[x, type: :column].each do |v2|
-          v2.candidates -= [v.value] unless v2.value
+        board[idx, :column].each do |v2|
+          unless v2.value
+            v2.candidates -= [v.value]
+            queue << idx
+          end
         end
-        block_index = board.block_index(x, y)
-        board[block_index, type: :block].each do |v2|
-          v2.candidates -= [v.value] unless v2.value
+        board[idx, :block].each do |v2|
+          unless v2.value
+            v2.candidates -= [v.value]
+            queue << idx
+          end
         end
         v.candidates = [v.value]
       end
