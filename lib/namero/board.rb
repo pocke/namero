@@ -107,15 +107,65 @@ module Namero
       end
     end
 
-    def to_s
+    def to_s(mode: :simple)
       out = +""
-      @values.each.with_index do |v, idx|
-        if v.value
-          out << (v.value).to_s
-        else
-          out << '.'
+      case mode
+      when :simple
+        @values.each.with_index do |v, idx|
+          if v.value
+            out << (v.value).to_s
+          else
+            out << '.'
+          end
+          out << "\n" if idx % n == n - 1
         end
-        out << "\n" if idx % n == n - 1
+      when :with_candidates
+        @values.each.each_slice(n).with_index do |values, index|
+          values.each_slice(root_n) do |values2|
+            values2.each do |v|
+              if v.value
+                out << '***'
+              else
+                out << (v.candidates.include?(1) ? '1' : '.')
+                out << (v.candidates.include?(2) ? '2' : '.')
+                out << (v.candidates.include?(3) ? '3' : '.')
+              end
+              out << ' '
+            end
+            out << ' | '
+          end
+          out << "\n"
+          values.each_slice(root_n) do |values2|
+            values2.each do |v|
+              if v.value
+                out << "*#{v.value}*"
+              else
+                out << (v.candidates.include?(4) ? '4' : '.')
+                out << (v.candidates.include?(5) ? '5' : '.')
+                out << (v.candidates.include?(6) ? '6' : '.')
+              end
+              out << ' '
+            end
+            out << ' | '
+          end
+          out << "\n"
+          values.each_slice(root_n) do |values2|
+            values2.each do |v|
+              if v.value
+                out << '***'
+              else
+                out << (v.candidates.include?(7) ? '7' : '.')
+                out << (v.candidates.include?(8) ? '8' : '.')
+                out << (v.candidates.include?(9) ? '9' : '.')
+              end
+              out << ' '
+            end
+            out << ' | '
+          end
+          out << "\n#{'-' * ((root_n + 1) * n + (root_n) * 3) if index % root_n == root_n - 1}\n"
+        end
+      else
+        raise "unknown mode: #{mode}"
       end
       out
     end
