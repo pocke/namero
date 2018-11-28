@@ -2,6 +2,21 @@ module Namero
   class Board
     attr_reader :n
 
+    # ..4.
+    # ...1
+    # 4...
+    # 21..
+    def self.load_from_string(str, n)
+      values = str.split("\n").map(&:chars).flatten.map.with_index do |v, idx|
+        if v == '.'
+          Namero::Value.new(value: nil, candidates: (1..n).to_a, index: idx)
+        else
+          Namero::Value.new(value: Integer(v), candidates: [Integer(v)], index: idx)
+        end
+      end
+      Namero::Board.new(n: n, values: values)
+    end
+
     # n: Integer
     # values: Array<Integer>
     def initialize(n:, values: Array.new(n**2))
@@ -90,6 +105,19 @@ module Namero
       @values.all? do |v|
         v.value
       end
+    end
+
+    def to_s
+      out = +""
+      @values.each.with_index do |v, idx|
+        if v.value
+          out << (v.value).to_s
+        else
+          out << '.'
+        end
+        out << "\n" if idx % n == n - 1
+      end
+      out
     end
 
     private
