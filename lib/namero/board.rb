@@ -101,9 +101,24 @@ module Namero
       end
     end
 
+    def each_affected_group
+      return enum_for(__method__) unless block_given?
+
+      n.times do |i|
+        yield self[i, :column]
+        yield self[i * n, :row]
+        yield self[(i % root_n) * root_n + (i / root_n) * n * root_n, :block]
+      end
+    end
+
     def complete?
-      @values.all? do |v|
+      all_filled = @values.all? do |v|
         v.value
+      end
+      return false unless all_filled
+
+      return each_affected_group.all? do |group|
+        group.map(&:value).uniq.size == n
       end
     end
 

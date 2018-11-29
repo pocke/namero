@@ -84,6 +84,22 @@ class TestBoard < Minitest::Test
     assert_equal [1, 3, 4, 2], board[10, :block]
   end
 
+  def test_each_affected_group
+    board = Namero::Board.new(n: 4, values: [
+      4,   1,   1,   3,
+      2,   3,   2,   2,
+      3,   1,   1,   3,
+      2,   4,   4,   2,
+    ])
+    assert_equal [
+      # columns     rows          blocks
+      [4, 2, 3, 2], [4, 1, 1, 3], [4, 1, 2, 3],
+      [1, 3, 1, 4], [2, 3, 2, 2], [1, 3, 2, 2],
+      [1, 2, 1, 4], [3, 1, 1, 3], [3, 1, 2, 4],
+      [3, 2, 3, 2], [2, 4, 4, 2], [1, 3, 4, 2],
+    ], board.each_affected_group.to_a
+  end
+
   def assert_values(expected, board)
     got = board.instance_variable_get(:@values)
     assert_equal expected, got

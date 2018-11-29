@@ -2,16 +2,23 @@ require 'set'
 
 module Namero
   class Solver
-    def initialize(board)
+    def initialize(board, extentions: [])
       @board = board
       @updated_candidate_queue = Set.new
+      @extentions = extentions
     end
 
     def solve
       fill_candidates
       loop do
-        idx = @updated_candidate_queue.each.first
-        break unless idx
+        idx = updated_candidate_queue.each.first
+        unless idx
+          extentions.each do |ex|
+            ex.solve(board, updated_candidate_queue)
+          end
+          break if updated_candidate_queue.empty?
+          next
+        end
         @updated_candidate_queue.delete idx
         fill_one_candidate(idx)
       end
@@ -19,7 +26,7 @@ module Namero
 
     private
 
-    attr_reader :board, :updated_candidate_queue
+    attr_reader :board, :updated_candidate_queue, :extentions
 
     def fill_one_candidate(idx)
       v = board[idx]
