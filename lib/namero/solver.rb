@@ -2,10 +2,10 @@ require 'set'
 
 module Namero
   class Solver
-    def initialize(board, extentions: [])
+    def initialize(board, extensions: [])
       @board = board
       @updated_candidate_queue = Set.new
-      @extentions = extentions
+      @extensions = extensions
     end
 
     def solve
@@ -13,7 +13,7 @@ module Namero
       loop do
         idx = updated_candidate_queue.each.first
         unless idx
-          extentions.each do |ex|
+          extensions.each do |ex|
             ex.solve(board, updated_candidate_queue)
           end
           break if updated_candidate_queue.empty?
@@ -26,7 +26,7 @@ module Namero
 
     private
 
-    attr_reader :board, :updated_candidate_queue, :extentions
+    attr_reader :board, :updated_candidate_queue, :extensions
 
     def fill_one_candidate(idx)
       v = board[idx]
