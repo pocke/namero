@@ -38,41 +38,6 @@ module Namero
       end
     end
 
-    # x, y: 0 based index
-    # type: :single, :row, :column, :block, :index
-    def []=(idx, type = :index, value)
-      case type
-      when :index
-        @values[idx] = value
-      when :row
-        start = (idx / n) * n
-        n.times do |i|
-          @values[start+i] = value[i]
-        end
-      when :column
-        x = idx % n
-        n.times do |i|
-          @values[i * n + x] = value[i]
-        end
-      when :block
-        x = idx % n
-        y = idx / n
-        start_x = x / root_n * root_n
-        start_y = y / root_n * root_n
-
-        value_idx = 0
-        root_n.times do |y_offset|
-          root_n.times do |x_offset|
-
-            self[start_x + x_offset + (start_y + y_offset) * n] = value[value_idx]
-            value_idx += 1
-          end
-        end
-      else
-        raise "Unknown type: #{type}"
-      end
-    end
-
     def [](idx, type = :index)
       case type
       when :index
@@ -84,7 +49,7 @@ module Namero
         x = idx % n
         @columns[x]
       when :block
-        return @blocks[idx / n / root_n * root_n + idx % n / root_n]
+        @blocks[idx / n / root_n * root_n + idx % n / root_n]
       else
         raise "Unknown type: #{type}"
       end
