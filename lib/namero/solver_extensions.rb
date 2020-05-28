@@ -20,7 +20,7 @@ module Namero
           (1..n).each do |v|
             box = nil
             group.each do |value|
-              if value.candidates.include?(v) && value.value.nil?
+              if !value.value && value.candidates.include?(v)
                 if box
                   box = nil
                   break
