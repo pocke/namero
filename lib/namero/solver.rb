@@ -11,7 +11,7 @@ module Namero
     def solve
       fill_candidates
       loop do
-        idx = updated_candidate_queue.each.first
+        idx = updated_candidate_queue.first
         unless idx
           extensions.each do |ex|
             ex.solve(board, updated_candidate_queue)
