@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class TestBoard < Minitest::Test
+class TestSolver < Minitest::Test
   def test_fill_candidates
     board = board_from_string(<<~END.chomp)
       1xxx

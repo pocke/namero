@@ -69,7 +69,7 @@ module Namero
         @values[start...start+@n]
       when :column
         x = idx % n
-        @values.each_slice(n).map{|row| row[x]}
+        Array.new(n) { |i| @values[i * n + x] }
       when :block
         x = idx % n
         y = idx / n
