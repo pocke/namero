@@ -38,19 +38,19 @@ module Namero
     def fill_candidate_for(v)
       board[v.index, :row].each do |v2|
         unless v2.value
-          v2.candidates -= [v.value]
+          v2.candidates.delete(v.value)
           updated_candidate_queue << v2.index
         end
       end
       board[v.index, :column].each do |v2|
         unless v2.value
-          v2.candidates -= [v.value]
+          v2.candidates.delete(v.value)
           updated_candidate_queue << v2.index
         end
       end
       board[v.index, :block].each do |v2|
         unless v2.value
-          v2.candidates -= [v.value]
+          v2.candidates.delete(v.value)
           updated_candidate_queue << v2.index
         end
       end
