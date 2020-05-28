@@ -23,6 +23,19 @@ module Namero
       raise ArgumentError if values.size != n**2
       @n = n
       @values = values
+      @columns = Array.new(n) do |x|
+        Array.new(n) { |i| values[i * n + x] }
+      end
+      @blocks = Array.new(n) do |i|
+        idx = i % root_n * root_n + (i / root_n) * n * root_n
+        block = []
+        root_n.times do |y_offset|
+          root_n.times do |x_offset|
+            block << values[idx + x_offset + y_offset * n]
+          end
+        end
+        block
+      end
     end
 
     # x, y: 0 based index
@@ -69,21 +82,9 @@ module Namero
         @values[start...start+@n]
       when :column
         x = idx % n
-        Array.new(n) { |i| @values[i * n + x] }
+        @columns[x]
       when :block
-        x = idx % n
-        y = idx / n
-        start_x = x / root_n * root_n
-        start_y = y / root_n * root_n
-
-        [].tap do |res|
-          root_n.times do |y_offset|
-            root_n.times do |x_offset|
-              
-              res << self[start_x + x_offset + (start_y + y_offset) * n]
-            end
-          end
-        end
+        return @blocks[idx / n / root_n * root_n + idx % n / root_n]
       else
         raise "Unknown type: #{type}"
       end
@@ -185,9 +186,7 @@ module Namero
       out
     end
 
-    private
-
-    def root_n
+    private def root_n
       Integer.sqrt(n)
     end
   end
