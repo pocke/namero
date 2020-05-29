@@ -17,22 +17,22 @@ module Namero
 
       def solve
         board.each_affected_group do |group|
-          (1..n).each do |v|
-            box = nil
-            group.each do |value|
-              if !value.value && value.candidates.include?(v)
-                if box
-                  box = nil
-                  break
-                else
-                  box = value
-                end
+          table = []
+          group.each do |value|
+            next if value.value
+            value.candidates.each do |c|
+              if table[c].nil?
+                table[c] = value
+              elsif table[c]
+                table[c] = false
               end
             end
+          end
 
-            if box
-              box.candidates = [v]
-              queue << box.index
+          table.each.with_index do |value, idx|
+            if value
+              value.candidates = [idx]
+              queue << value.index
             end
           end
         end

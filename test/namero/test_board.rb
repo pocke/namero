@@ -11,44 +11,6 @@ class TestBoard < Minitest::Test
     ], board
   end
 
-  def test_set_row
-    board = Namero::Board.new(n: 4)
-    board[0, :row] = [1, 2, 3, 4]
-    board[15, :row] = [4, nil, 2, 1]
-    assert_values [
-      1,   2,   3,   4,
-      nil, nil, nil, nil,
-      nil, nil, nil, nil,
-      4,   nil, 2,   1,
-    ], board
-  end
-
-  def test_set_column
-    board = Namero::Board.new(n: 4)
-    board[0, :column] = [1, 2, 3, 4]
-    board[7, :column] = [4, 3, nil, 1]
-    assert_values [
-      1, nil, nil, 4,
-      2, nil, nil, 3,
-      3, nil, nil, nil,
-      4, nil, nil, 1,
-    ], board
-  end
-
-  def test_set_block
-    board = Namero::Board.new(n: 4)
-    board[1, :block] = [1, 2, 3, 4]
-    board[6, :block] = [2, 3, 4, 1]
-    board[9, :block] = [1, 3, 2, 4]
-    board[14, :block] = [4, 2, 1, 3]
-    assert_values [
-      1, 2, 2, 3,
-      3, 4, 4, 1,
-      1, 3, 4, 2,
-      2, 4, 1, 3,
-    ], board
-  end
-
   def test_get_row
     board = Namero::Board.new(n: 4, values: [
       1,   nil, nil, 4,
@@ -92,11 +54,9 @@ class TestBoard < Minitest::Test
       2,   4,   4,   2,
     ])
     assert_equal [
-      # columns     rows          blocks
-      [4, 2, 3, 2], [4, 1, 1, 3], [4, 1, 2, 3],
-      [1, 3, 1, 4], [2, 3, 2, 2], [1, 3, 2, 2],
-      [1, 2, 1, 4], [3, 1, 1, 3], [3, 1, 2, 4],
-      [3, 2, 3, 2], [2, 4, 4, 2], [1, 3, 4, 2],
+      [4, 1, 1, 3], [2, 3, 2, 2], [3, 1, 1, 3], [2, 4, 4, 2], # rows
+      [4, 2, 3, 2], [1, 3, 1, 4], [1, 2, 1, 4], [3, 2, 3, 2], # columns
+      [4, 1, 2, 3], [1, 3, 2, 2], [3, 1, 2, 4], [1, 3, 4, 2], # blocks
     ], board.each_affected_group.to_a
   end
 

@@ -23,40 +23,22 @@ module Namero
       raise ArgumentError if values.size != n**2
       @n = n
       @values = values
-    end
-
-    # x, y: 0 based index
-    # type: :single, :row, :column, :block, :index
-    def []=(idx, type = :index, value)
-      case type
-      when :index
-        @values[idx] = value
-      when :row
-        start = (idx / n) * n
-        n.times do |i|
-          @values[start+i] = value[i]
-        end
-      when :column
-        x = idx % n
-        n.times do |i|
-          @values[i * n + x] = value[i]
-        end
-      when :block
-        x = idx % n
-        y = idx / n
-        start_x = x / root_n * root_n
-        start_y = y / root_n * root_n
-
-        value_idx = 0
+      @rows = Array.new(n) do |i|
+        start = i * n
+        values[start...start+n]
+      end
+      @columns = Array.new(n) do |x|
+        Array.new(n) { |i| values[i * n + x] }
+      end
+      @blocks = Array.new(n) do |i|
+        idx = i % root_n * root_n + (i / root_n) * n * root_n
+        block = []
         root_n.times do |y_offset|
           root_n.times do |x_offset|
-
-            self[start_x + x_offset + (start_y + y_offset) * n] = value[value_idx]
-            value_idx += 1
+            block << values[idx + x_offset + y_offset * n]
           end
         end
-      else
-        raise "Unknown type: #{type}"
+        block
       end
     end
 
@@ -65,25 +47,12 @@ module Namero
       when :index
         @values[idx]
       when :row
-        start = (idx / n ) * n
-        @values[start...start+@n]
+        @rows[idx / n]
       when :column
         x = idx % n
-        Array.new(n) { |i| @values[i * n + x] }
+        @columns[x]
       when :block
-        x = idx % n
-        y = idx / n
-        start_x = x / root_n * root_n
-        start_y = y / root_n * root_n
-
-        [].tap do |res|
-          root_n.times do |y_offset|
-            root_n.times do |x_offset|
-              
-              res << self[start_x + x_offset + (start_y + y_offset) * n]
-            end
-          end
-        end
+        @blocks[idx / n / root_n * root_n + idx % n / root_n]
       else
         raise "Unknown type: #{type}"
       end
@@ -101,14 +70,12 @@ module Namero
       end
     end
 
-    def each_affected_group
+    def each_affected_group(&block)
       return enum_for(__method__) unless block_given?
 
-      n.times do |i|
-        yield self[i, :column]
-        yield self[i * n, :row]
-        yield self[(i % root_n) * root_n + (i / root_n) * n * root_n, :block]
-      end
+      @rows.each(&block)
+      @columns.each(&block)
+      @blocks.each(&block)
     end
 
     def complete?
@@ -185,9 +152,7 @@ module Namero
       out
     end
 
-    private
-
-    def root_n
+    private def root_n
       Integer.sqrt(n)
     end
   end
