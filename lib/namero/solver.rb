@@ -24,16 +24,16 @@ module Namero
       end
     end
 
-    private
-
-    attr_reader :board, :updated_candidate_queue, :extensions
-
     def fill_one_candidate(idx)
       v = board[idx]
       return if v.candidates.size != 1
       v.value = v.candidates.first
       fill_candidate_for(v)
     end
+
+    private
+
+    attr_reader :board, :updated_candidate_queue, :extensions
 
     def fill_candidate_for(v)
       board[v.index, :row].each do |v2|
