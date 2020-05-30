@@ -10,7 +10,7 @@ module Namero
     end
 
     def dup
-      self.new(value: value, candidates: candidates.dup)
+      self.class.new(value: value, candidates: candidates.dup, index: index)
     end
   end
 end
