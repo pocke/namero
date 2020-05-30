@@ -64,4 +64,16 @@ class TestBoard < Minitest::Test
     got = board.instance_variable_get(:@values)
     assert_equal expected, got
   end
+
+  def test_board_from_array
+    array = [
+      nil, nil,   4, nil,
+      nil, nil, nil, 1,
+      4,   nil, nil, nil,
+      2,   1,   nil, nil,
+    ]
+    board = Namero::Board.load_from_array(array, 4)
+
+    assert_equal array, board.each_values.map(&:value)
+  end
 end

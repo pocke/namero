@@ -17,6 +17,23 @@ module Namero
       Namero::Board.new(n: n, values: values)
     end
 
+    # [
+    #   nil, nil,   4, nil,
+    #   nil, nil, nil, 1,
+    #   4,   nil, nil, nil,
+    #   2,   1,   nil, nil,
+    # ]
+    def self.load_from_array(array, n)
+      values = array.map.with_index do |v, idx|
+        if v
+          Namero::Value.new(value: v, candidates: [v], index: idx)
+        else
+          Namero::Value.new(value: nil, candidates: (1..n).to_a, index: idx)
+        end
+      end
+      Namero::Board.new(n: n, values: values)
+    end
+
     # n: Integer
     # values: Array<Integer>
     def initialize(n:, values: Array.new(n**2))
